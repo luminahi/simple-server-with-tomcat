@@ -1,15 +1,10 @@
 package com.luminahi;
 
-import java.io.IOException;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.luminahi.servlets.StaticServlet;
 
 public class Main {
     public static void main(String[] args) throws LifecycleException {
@@ -18,16 +13,9 @@ public class Main {
         tomcat.getConnector();
 
         Context context = tomcat.addContext("", null);
-        Tomcat.addServlet(context, "hello", new HttpServlet() {
-            @Override
-            protected void doGet(HttpServletRequest req, HttpServletResponse res)
-                    throws ServletException, IOException {
-                res.getWriter().println("<h2>Hello Tom Neko</h2>");
-            }
-        });
 
-        context.addServletMappingDecoded("/", "hello");
-
+        Tomcat.addServlet(context, "staticApp", new StaticServlet());
+        context.addServletMappingDecoded("/", "staticApp");
 
         tomcat.start();
         tomcat.getServer().await();
